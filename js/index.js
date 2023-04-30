@@ -33,6 +33,13 @@ var TSE;
                 throw new Error("Shader failed to load.");
             }
             this._shader.use();
+            this.loadBuffers();
+            if (this._triangleVertexBuffer === undefined) {
+                throw new Error("Failed to create buffer.");
+            }
+            TSE.gl.bindBuffer(TSE.gl.ARRAY_BUFFER, this._triangleVertexBuffer);
+            TSE.gl.vertexAttribPointer(0, 3, TSE.gl.FLOAT, false, 0, 0);
+            TSE.gl.enableVertexAttribArray(0);
             this.loop();
         };
         /**
@@ -50,14 +57,43 @@ var TSE;
          */
         Engine.prototype.loop = function () {
             TSE.gl.clear(TSE.gl.COLOR_BUFFER_BIT);
+            if (this._shader === undefined) {
+                throw new Error("Shader failed to load.");
+            }
+            this._shader.use();
+            if (this._triangleVertexBuffer === undefined) {
+                throw new Error("Failed to create buffer.");
+            }
+            TSE.gl.bindBuffer(TSE.gl.ARRAY_BUFFER, this._triangleVertexBuffer);
+            TSE.gl.vertexAttribPointer(0, 3, TSE.gl.FLOAT, false, 0, 0);
+            TSE.gl.enableVertexAttribArray(0);
+            TSE.gl.drawArrays(TSE.gl.TRIANGLES, 0, 6);
             requestAnimationFrame(this.loop.bind(this));
+        };
+        /**
+         * Create buffers and load data into them.
+         */
+        Engine.prototype.loadBuffers = function () {
+            var triangleVertices = [
+                0.0, 0.0, 0.0,
+                0.0, 0.5, 0.0,
+                0.5, 0.5, 0.0,
+                -0.1, -0.1, 0.0,
+                0.0, 0.6, 0.0,
+                -0.5, -0.5, 0.0
+            ];
+            this._triangleVertexBuffer = TSE.gl.createBuffer();
+            TSE.gl.bindBuffer(TSE.gl.ARRAY_BUFFER, this._triangleVertexBuffer);
+            TSE.gl.bufferData(TSE.gl.ARRAY_BUFFER, new Float32Array(triangleVertices), TSE.gl.STATIC_DRAW);
+            TSE.gl.vertexAttribPointer(0, 3, TSE.gl.FLOAT, false, 0, 0);
+            TSE.gl.enableVertexAttribArray(0);
         };
         /**
          * Loads shaders
          */
         Engine.prototype.loadShaders = function () {
             var vertexShaderSource = "\n                attribute vec3 aVertexPosition;\n\n                void main() {\n                    gl_Position = vec4(aVertexPosition, 1.0);\n                }";
-            var fragmentShaderSource = "\n                void main() {\n                    gl_FragColor = vec4(1.0);\n                }";
+            var fragmentShaderSource = "\n                precision mediump float;\n\n                void main() {\n                    gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);\n                }";
             this._shader = new TSE.Shader("basic", vertexShaderSource, fragmentShaderSource);
         };
         return Engine;

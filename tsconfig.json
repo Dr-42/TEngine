@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "amd",
+    "strict": true,
+    "outFile": "src/index.js",
+  }
+}

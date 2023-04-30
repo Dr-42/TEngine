@@ -3,6 +3,6 @@
     "target": "es5",
     "module": "amd",
     "strict": true,
-    "outFile": "src/index.js",
+    "outFile": "js/index.js",
   }
 }

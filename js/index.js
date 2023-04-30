@@ -2,9 +2,13 @@
 // Author: Dr. Spandan Roy
 //
 // This file is the entry point of the game.
+var game;
 window.onload = function () {
-    var game = new TSE.Engine();
+    game = new TSE.Engine();
     game.start();
+};
+window.onresize = function () {
+    game.resize();
 };
 var TSE;
 (function (TSE) {
@@ -21,9 +25,20 @@ var TSE;
          */
         Engine.prototype.start = function () {
             console.log("Engine started.");
-            var canvas = TSE.GLUtils.getGLContext();
+            this.canvas = TSE.GLUtils.getGLContext();
             TSE.gl.clearColor(0.3, 0.0, 0.3, 1.0);
+            this.resize();
             this.loop();
+        };
+        /**
+         * Resizes the canvas to fit the window.
+         */
+        Engine.prototype.resize = function () {
+            if (this.canvas !== undefined) {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight * 0.99;
+                TSE.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+            }
         };
         /**
          * The game loop.

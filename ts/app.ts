@@ -1,7 +1,14 @@
 // Author: Dr. Spandan Roy
 //
 // This file is the entry point of the game.
+
+var game: TSE.Engine;
+
 window.onload = function () {
-    const game = new TSE.Engine();
+    game = new TSE.Engine();
     game.start();
+}
+
+window.onresize = function () {
+    game.resize();
 }
